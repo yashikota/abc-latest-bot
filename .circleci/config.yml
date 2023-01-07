@@ -1,0 +1,27 @@
+version: 2.1
+
+jobs:
+  build:
+    docker:
+      - image: cimg/rust:1.65.0
+    steps:
+      - checkout
+
+      - run:
+          name: Run main.rs
+          command: cargo run ./src/main.rs
+
+workflows:
+  version: 2
+  Abc Latest Bot:
+    triggers:
+      - schedule:
+          cron: "00 * * * *" # 1時間おきに実行(JST)
+          filters:
+            branches:
+              only:
+                - master
+
+    jobs:
+      - build:
+          context: AbcBot

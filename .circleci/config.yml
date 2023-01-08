@@ -9,14 +9,14 @@ jobs:
 
       - run:
           name: Run main.rs
-          command: cargo run ./src/main.rs
+          command: cargo run
 
 workflows:
   version: 2
   Abc Latest Bot:
     triggers:
       - schedule:
-          cron: "00 * * * *" # 1時間おきに実行(JST)
+          cron: "00 * * * *" # 1時間おきに実行
           filters:
             branches:
               only:

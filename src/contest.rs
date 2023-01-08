@@ -1,5 +1,16 @@
 use chrono::{FixedOffset, TimeZone, NaiveDateTime, Duration};
 
+fn fetch_contest_info() -> serde_json::Value {
+let url = "https://abc-latest.deno.dev/";
+    let res = ureq::get(url)
+        .set("Accept", "application/json")
+        .call();
+    let res = res.unwrap();
+    let body = res.into_string().unwrap();
+    let body: serde_json::Value = serde_json::from_str(&body).unwrap();
+    body
+}
+
 fn get_now_time() -> String {
     let time_difference = 9;
     let hour = 3600;
@@ -11,13 +22,7 @@ fn get_now_time() -> String {
 }
 
 fn get_contest_time() -> String {
-    let url = "https://abc-latest.deno.dev/";
-    let res = ureq::get(url)
-        .set("Accept", "application/json")
-        .call();
-    let res = res.unwrap();
-    let body = res.into_string().unwrap();
-    let body: serde_json::Value = serde_json::from_str(&body).unwrap();
+    let body = fetch_contest_info();
     let contest_time = body["start"].as_str().unwrap();
     contest_time.to_string()
 }
@@ -32,13 +37,7 @@ pub fn is_one_hour_before_the_contest() -> bool {
 }
 
 pub fn get_contest_info() -> String {
-    let url = "https://abc-latest.deno.dev/";
-    let res = ureq::get(url)
-        .set("Accept", "application/json")
-        .call();
-    let res = res.unwrap();
-    let body = res.into_string().unwrap();
-    let body: serde_json::Value = serde_json::from_str(&body).unwrap();
+    let body = fetch_contest_info();
     let contest_time = body["start"].as_str().unwrap();
     let contest_title = body["title"].as_str().unwrap();
     let contest_url = body["url"].as_str().unwrap();

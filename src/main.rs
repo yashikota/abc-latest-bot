@@ -18,12 +18,12 @@ impl EventHandler for Handler {
         let channel_id_number: u64 = env::var("CHANNEL_ID").unwrap().parse().unwrap();
         let channel_id = ChannelId(channel_id_number);
 
-        if contest::is_one_hour_before_the_contest() {
+        if contest::is_friday_9pm() {
             if let Err(why) = channel_id.say(&ctx.http, contest::get_contest_info()).await {
-                println!("Error sending message: {:?}", why);
+                println!("Error sending message: {why:?}");
             }
         } else {
-            println!("Not 1 hour before the contest");
+            println!("Not Friday 9pm");
         }
 
         process::exit(0);
@@ -37,10 +37,12 @@ async fn main() {
         | GatewayIntents::DIRECT_MESSAGES
         | GatewayIntents::MESSAGE_CONTENT;
 
-    let mut client =
-        Client::builder(&token, intents).event_handler(Handler).await.expect("Err creating client");
+    let mut client = Client::builder(&token, intents)
+        .event_handler(Handler)
+        .await
+        .expect("Err creating client");
 
     if let Err(why) = client.start().await {
-        println!("Client error: {:?}", why);
+        println!("Client error: {why:?}");
     }
 }

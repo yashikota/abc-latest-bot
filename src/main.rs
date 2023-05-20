@@ -18,12 +18,8 @@ impl EventHandler for Handler {
         let channel_id_number: u64 = env::var("CHANNEL_ID").unwrap().parse().unwrap();
         let channel_id = ChannelId(channel_id_number);
 
-        if contest::is_friday_9pm() {
-            if let Err(why) = channel_id.say(&ctx.http, contest::get_contest_info()).await {
-                println!("Error sending message: {why:?}");
-            }
-        } else {
-            println!("Not Friday 9pm");
+        if let Err(why) = channel_id.say(&ctx.http, contest::get_contest_info()).await {
+            println!("Error sending message: {why:?}");
         }
 
         process::exit(0);
